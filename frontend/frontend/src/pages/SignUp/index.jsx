@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from "react";
 import { signUp } from "./api";
-import { Input } from './components/Input';
-import { useTranslation } from 'react-i18next';
+import { Input } from "./components/Input";
+import { useTranslation } from "react-i18next";
 import { LanguageSelector } from "../../shared/components/LanguageSelector";
 
 
@@ -20,8 +20,8 @@ export function SignUp(){
         setErrors(function(lastErrors){
             return {
                 ...lastErrors,
-                username: undefined
-            }
+                username: undefined,
+            };
         });
     }, [username]);
 
@@ -29,7 +29,7 @@ export function SignUp(){
         setErrors(function(lastErrors){
             return {
                 ...lastErrors,
-                email: undefined
+                email: undefined,
             }
         });
     }, [email]);
@@ -38,7 +38,7 @@ export function SignUp(){
         setErrors(function(lastErrors){
             return {
                 ...lastErrors,
-                password: undefined
+                password: undefined,
             }
         });
     }, [password]);
@@ -59,13 +59,13 @@ export function SignUp(){
             });
             setSuccessMessage(response.data.message);
         } catch (axiosError){
-            if(
-            axiosError.response?.data &&
-            axiosError.response.data.status === 400
-            ){
+            if(axiosError.response?.data){
+            if (axiosError.response.data.status === 400){
                 setErrors(axiosError.response.data.validationErrors);
             }else {
-                setGeneralError(t('genericError'));
+                setGeneralError(axiosError.response.data.message);
+            }}else {
+                setGeneralError(t("genericError"));
             }
         }finally {
             setApiProgress(false);
@@ -74,38 +74,60 @@ export function SignUp(){
 
 
     const passwordRepeatError = useMemo(() => {
-            if(password && password !== passwordRepeat){
-                return t('passwordMismatch')
+            if (password && password !== passwordRepeat){
+                return t("passwordMismatch")
             }
-            return '';
+            return "";
     }, [password, passwordRepeat]);
 
 
 
     return(
-            <div className='container'>
-                <div className='col-lg-6 offset-lg-3 col-sm-8 offset-sm-2'>
-                    <form className='card' onSubmit={onSubmit}>
-                        <div className='text-center card-header'>
-                            <h1>{t('signUp')}</h1>
+            <div className="container">
+                <div className="col-lg-6 offset-lg-3 col-sm-8 offset-sm-2">
+                    <form className="card" onSubmit={onSubmit}>
+                        <div className="text-center card-header">
+                            <h1>{t("signUp")}</h1>
                         </div>
-                        <div className='card-body'>
-                            <Input id="username" label={t('username')} error={errors.username} onChange={(event) => setUsername(event.target.value)} />
-                            <Input id="email" label={t('email')} error={errors.email} onChange={(event) => setEmail(event.target.value)} />
-                            <Input id="password" label={t('password')} error={errors.password} type="password" onChange={(event) => setPassword(event.target.value)} />
-                            <Input id="passwordRepeat" label={t('passwordRepeat')} error={passwordRepeatError} onChange={(event) => setPasswordRepeat(event.target.value)} type="password" />
+                        <div className="card-body">
+                            <Input
+                            id="username"
+                            label={t("username")}
+                            error={errors.username}
+                            onChange={(event) => setUsername(event.target.value)}
+                            />
+                            <Input
+                            id="email"
+                            label={t("email")}
+                            error={errors.email}
+                            onChange={(event) => setEmail(event.target.value)}
+                            />
+                            <Input
+                            id="password"
+                            label={t("password")}
+                            error={errors.password}
+                            type="password"
+                            onChange={(event) => setPassword(event.target.value)}
+                            />
+                            <Input
+                            id="passwordRepeat"
+                            label={t("passwordRepeat")}
+                            error={passwordRepeatError}
+                            onChange={(event) => setPasswordRepeat(event.target.value)}
+                            type="password"
+                            />
                             {successMessage && (
-                                <div className='alert alert-success'>{successMessage}</div>
+                                <div className="alert alert-success">{successMessage}</div>
                             )}
                             {generalError && (
-                                <div className='alert alert-danger'>{generalError}</div>
+                                <div className="alert alert-danger">{generalError}</div>
                             )}
-                            <div className='text-center'>
+                            <div className="text-center">
                                 <button
-                                    className='btn btn-primary'
+                                    className="btn btn-primary"
                                     disabled={apiProgress || (!password || password !== passwordRepeat)}>
-                                        {apiProgress && <span className='spinner-border spinner-border-sm' aria-hidden="true" > </span>}
-                                        {t('signUp')}
+                                        {apiProgress && <span className="spinner-border spinner-border-sm" aria-hidden="true" > </span>}
+                                        {t("signUp")}
                                 </button>
                             </div>
                         </div>
