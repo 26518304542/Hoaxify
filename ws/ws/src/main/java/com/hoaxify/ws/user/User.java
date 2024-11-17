@@ -33,6 +33,10 @@ public class User {
 
 
 
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
+    }
+
     public boolean isActive() {
         return active;
     }
@@ -46,9 +50,7 @@ public class User {
         return activationToken;
     }
 
-    public void setAcitvationToken(String acitvationToken) {
-        this.activationToken = acitvationToken;
-    }
+
 
 
     public long getId() {
