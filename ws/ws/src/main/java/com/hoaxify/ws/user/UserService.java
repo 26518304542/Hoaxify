@@ -10,7 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.hoaxify.ws.user.email.EmailService;
+import com.hoaxify.ws.email.EmailService;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.NotUniqueEmailException;
 
@@ -34,7 +34,7 @@ public class UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setActivationToken(UUID.randomUUID().toString());
             userRepository.saveAndFlush(user);
-            emailService.sendActivationMail(user.getEmail(), user.getActivationToken());
+            emailService.sendActivationEmail(user.getEmail(), user.getActivationToken());
         }
         catch (DataIntegrityViolationException ex ){
             throw new NotUniqueEmailException();
