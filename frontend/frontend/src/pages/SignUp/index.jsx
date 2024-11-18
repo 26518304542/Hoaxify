@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo } from "react";
 import { signUp } from "./api";
 import { Input } from "./components/Input";
 import { useTranslation } from "react-i18next";
-import { LanguageSelector } from "../../shared/components/LanguageSelector";
 
 
 export function SignUp(){
@@ -132,7 +131,6 @@ export function SignUp(){
                             </div>
                         </div>
                     </form>
-                    <LanguageSelector />
                 </div>
             </div>
     )
