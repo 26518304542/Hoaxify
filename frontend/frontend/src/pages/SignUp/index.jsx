@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import { signUp } from "./api";
 import { Input } from "./components/Input";
 import { useTranslation } from "react-i18next";
+import { Alert } from "../../shared/components/Alert";
+import { Spinner } from "../../shared/components/Spinner";
 
 
 export function SignUp(){
@@ -9,7 +11,7 @@ export function SignUp(){
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [passwordRepeat, setPasswordRepeat] = useState();
-    const [apiProgress, setApiProgress] = useState(false);
+    const [apiProgress, setApiProgress] = useState();
     const [successMessage, setSuccessMessage] = useState();
     const [errors, setErrors] = useState({});
     const [generalError, setGeneralError] = useState();
@@ -116,16 +118,18 @@ export function SignUp(){
                             type="password"
                             />
                             {successMessage && (
-                                <div className="alert alert-success">{successMessage}</div>
+                                <Alert>{successMessage}</Alert>
                             )}
                             {generalError && (
-                                <div className="alert alert-danger">{generalError}</div>
+                                <Alert styleType="danger">{generalError}</Alert>
                             )}
                             <div className="text-center">
                                 <button
                                     className="btn btn-primary"
                                     disabled={apiProgress || (!password || password !== passwordRepeat)}>
-                                        {apiProgress && <span className="spinner-border spinner-border-sm" aria-hidden="true" > </span>}
+                                        {apiProgress && (
+                                            <Spinner sm={true} />
+                                        )}
                                         {t("signUp")}
                                 </button>
                             </div>
