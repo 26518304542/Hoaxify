@@ -24,3 +24,5 @@ i18nInstance
     }
   }
   );
+
+export default i18nInstance;
