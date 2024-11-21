@@ -6,10 +6,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -95,6 +98,11 @@ public class UserController {
         apiError.setMessage(exception.getMessage());
         apiError.setStatus(400);
         return ResponseEntity.status(400).body(apiError);
+    }
+
+    @GetMapping("api/v1/users")
+    Page<User> getUsers(Pageable page){
+        return userService.getUsers(page);
     }
 
 }
