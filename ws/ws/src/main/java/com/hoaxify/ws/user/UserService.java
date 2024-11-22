@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hoaxify.ws.email.EmailService;
+import com.hoaxify.ws.user.dto.UserProjection;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.InvalidTokenException;
 import com.hoaxify.ws.user.exception.NotUniqueEmailException;
@@ -60,8 +61,8 @@ public class UserService {
     }
 
 
-    public Page<User> getUsers(Pageable page) {
-        return userRepository.findAll(page);
+    public Page<UserProjection> getUsers(Pageable page) {
+        return userRepository.getAllUserRecords(page);
     }
 
 }

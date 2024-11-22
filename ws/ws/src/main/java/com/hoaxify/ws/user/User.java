@@ -1,6 +1,8 @@
 package com.hoaxify.ws.user;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -19,19 +21,50 @@ public class User {
 
     String username;
 
-
     String email;
 
-
+    @JsonIgnore
     String password;
 
-
+    @JsonIgnore
     boolean active = false;
 
-
+    @JsonIgnore
     String  activationToken;
 
+    String image;
 
+    String firstname;
+
+    String lastname;
+
+
+
+    
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 
     public void setActivationToken(String activationToken) {
         this.activationToken = activationToken;
