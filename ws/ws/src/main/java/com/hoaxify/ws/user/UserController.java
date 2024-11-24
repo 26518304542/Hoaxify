@@ -4,8 +4,10 @@ package com.hoaxify.ws.user;
 
 import java.util.stream.Collectors;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,12 @@ import com.hoaxify.ws.error.ApiError;
 import com.hoaxify.ws.shared.GenericMessage;
 import com.hoaxify.ws.shared.Messages;
 import com.hoaxify.ws.user.dto.UserCreate;
-import com.hoaxify.ws.user.dto.UserProjection;
+import com.hoaxify.ws.user.dto.UserDTO;
 import com.hoaxify.ws.user.exception.ActivationNotificationException;
 import com.hoaxify.ws.user.exception.InvalidTokenException;
 import com.hoaxify.ws.user.exception.NotUniqueEmailException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -50,6 +53,12 @@ public class UserController {
         userService.activateUser(token);
         String message = Messages.getMessageForLocale("hoaxify.activate.user.success.message", LocaleContextHolder.getLocale());
         return new GenericMessage(message);
+    }
+
+
+    @GetMapping("api/v1/users/{id}")
+    UserDTO getUserById(@PathVariable long id){
+        return new UserDTO(userService.getUser(id));
     }
 
 
@@ -93,17 +102,26 @@ public class UserController {
 
 
     @ExceptionHandler(InvalidTokenException.class)
-    ResponseEntity<ApiError> handleInvalidTokenException(InvalidTokenException exception){
+    ResponseEntity<ApiError> handleInvalidTokenException(InvalidTokenException exception, HttpServletRequest request){
         ApiError apiError = new ApiError();
-        apiError.setPath("/api/v1/users");
+        apiError.setPath(request.getRequestURI());
         apiError.setMessage(exception.getMessage());
         apiError.setStatus(400);
         return ResponseEntity.status(400).body(apiError);
     }
 
     @GetMapping("api/v1/users")
-    Page<UserProjection> getUsers(Pageable page){
-        return userService.getUsers(page);
+    Page<UserDTO> getUsers(Pageable page){
+        return userService.getUsers(page).map(UserDTO::new);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    ResponseEntity<ApiError> handleEntityNotFoundException(NotFoundException exception, HttpServletRequest request){
+        ApiError apiError = new ApiError();
+        apiError.setMessage(exception.getMessage());
+        apiError.setPath(request.getRequestURI());
+        apiError.setStatus(404);
+        return ResponseEntity.status(404).body(apiError);
     }
 
 }
