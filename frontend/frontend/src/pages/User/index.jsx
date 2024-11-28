@@ -15,7 +15,7 @@ export class UserClass extends Component{
         error: null
     }
 
-    async componentDidMount() {
+    loadUser = async () => {
         this.setState({ apiProgress:true })
         try{
             const response = await getUser(this.props.id);
@@ -34,6 +34,17 @@ export class UserClass extends Component{
             });
         }
     }
+
+    async componentDidMount(){
+        this.loadUser();
+    }
+
+    componentDidUpdate(previousProps, previousState){
+        if(this.props.id !== previousState.id){
+            this.loadUser();
+        }
+    }
+
 
     render() {
         return (
