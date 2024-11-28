@@ -3,6 +3,7 @@ import { getUser } from "./api";
 import { Alert } from "@/shared/components/Alert";
 import { Spinner } from "@/shared/components/Spinner";
 import { useParams } from "react-router-dom";
+import { withTranslation } from "react-i18next";
 
 
 
@@ -24,7 +25,7 @@ export class UserClass extends Component{
         }
         catch(axiosError){
             this.setState({
-                error: axiosError.response.data.Message,
+                error: this.props.t('userNotFoundError'),
             })
         }
         finally{
@@ -49,7 +50,9 @@ export class UserClass extends Component{
     }
 }
 
+const adding_translation_toUserClass = withTranslation()(UserClass)
+
 export function User(){
     const { id } = useParams();
-    return <UserClass id={id} />;
+    return <adding_translation_toUserClass id={id} />;
 }
